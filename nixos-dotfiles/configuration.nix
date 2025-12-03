@@ -20,7 +20,7 @@
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
+ time.timeZone = "Europe/Oslo";
   services = {
  	 displayManager.sddm.enable = true;
  	 displayManager.sddm.wayland.enable = true;
