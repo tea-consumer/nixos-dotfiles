@@ -12,6 +12,6 @@
 			renix = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos";
 		};
 	};
-	home.file."~/.config/hypr".source = ~/nixos-dotfiles/other-dotfiles/hypr;
-	home.file."~/.config/waybar".source = ~/nixos-dotfiles/other-dotfiles/waybar;
+	home.file.".config/hypr".source = ./other-dotfiles/hypr;
+	home.file.".config/waybar".source = ./other-dotfiles/waybar;
 }
