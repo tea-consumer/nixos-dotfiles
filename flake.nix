@@ -3,6 +3,7 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
+		dolphin-overlay.url = "github:rumboon/dolphin-overlay";
 		home-manager = {
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -13,12 +14,13 @@
 		};
 	};
 
-	outputs = inputs@{self, nixpkgs, home-manager, zen-browser,  ...}: {
+	outputs = inputs@{self, nixpkgs, home-manager, zen-browser, dolphin-overlay, ...}: {
 
 		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
 			modules = [
 				./configuration.nix
 				{
+				nixpkgs.overlays = [ dolphin-overlay.overlays.default ];
 				_module.args = { inherit inputs; };
 				}
 				home-manager.nixosModules.home-manager

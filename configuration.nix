@@ -114,6 +114,23 @@
      btop
      rose-pine-cursor
    ];
+   
+   xdg.portal = {
+    enable = true;
+    config = {
+      hyprland = {
+        default = [
+          "hyprland"
+          "kde"
+        ];
+      };
+    };
+    configPackages = with pkgs; [
+      xdg-desktop-portal-hyprland
+      kdePackages.xdg-desktop-portal-kde
+    ];
+  };
+
 
    nix.settings.experimental-features = ["nix-command" "flakes"];
 
