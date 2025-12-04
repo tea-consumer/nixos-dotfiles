@@ -1,41 +1,82 @@
-{
-    "layer": "top",
-    "reload_style_on_change": true,
-    "modules-left": [
-        "custom/nixos",
-        "hyprland/workspaces"
-    ],
-    "modules-center": [
-        "hyprland/window"
-    ],
-    "modules-right": [
-        "clock"
-    ],
-    "sway/window": {
-        "max-length": 50
-    },
-    "clock": {
-        "format": "󰥔 {:%H:%M}",
-        "format-alt": "{:%a, %d. %b  %H:%M}"
-    },
-    "hyprland/workspaces": {
-        "format": "<sub>{icon}</sub>",
-        "format-window-separator": "\n"
-    },
-    "hyprland/window": {
-        "rewrite": {
-        "(.*)Zen Browser": "󰺕 Zen browser ",
-        "(.*)@nixos(.*)": " Terminal",
-        "(.*) - VSCodium": " VSCodium",
-        "(.*) — Dolphin": " Dolphin @-$1",
-        "Steam": " Steam",
-        "": " Desktop"
-    },
-    "separate-outputs": true
-    },
-    "custom/nixos": {
-        "format": "󱄅",
-        "on-click": "rofi -show drun" 
-    }
-        
+* {
+    border: none;
+    border-radius: 0;
+    font-family: Roboto, Helvetica, Arial, sans-serif,"JetBrainsMono Nerd Font Propo";
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    /*background: rgba(43, 48, 59, 0.5);*/ 
+    background:rgba(0, 0, 0, 0.966);
+    min-height: 500px;
+    border-bottom:transparent;
+    color: white;
+}
+
+tooltip {
+  background: rgba(43, 48, 59, 0.5);
+  border: 1px solid rgba(100, 114, 125, 0.5);
+}
+tooltip label {
+  color: white;
+}
+
+#workspaces{
+    background-color: rgba(26, 26, 26, 0.687);
+    margin: 5 0 5 0px;
+    border-bottom-right-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    padding: 2 10 2 0px;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background: transparent;
+    color: white;
+    margin: 0 2.5px;
+    border-radius: 1em;
+    /*border-bottom: 3px solid transparent;*/
+    transition: all 150ms ease-in-out;
+}
+
+#workspaces button.active {
+    padding: 0 10px;
+    background: linear-gradient(45deg, rgb(78, 32, 109) 0%, rgb(44, 77, 168) 100%);
+    color: rgb(255, 255, 255);
+    border: 1px solid white ;
+    transition: all 150ms ease-in-out;
+
+}
+
+#workspaces button.focused {
+    background: #64727D;
+    border-bottom: 3px solid white;
+}
+
+
+
+#clock {
+   background-color: black;
+    background-color: rgba(26, 26, 26, 0.687);
+    border-radius: 0.5em;
+    padding: 0 10 0 10px;
+    margin: 5 10 5 0px;
+}
+
+#window{
+    background-color: rgba(26, 26, 26, 0.687);
+    border-radius: 0.5em;
+    padding: 0 10 0 10px;
+    margin: 5 0 5 0px;
+    transition: all 150ms ease-in-out;
+}
+
+#custom-nixos {
+    margin: 5 0 5 10px;
+    font-size: 17;
+    background-color: rgba(26, 26, 26, 0.687);
+    padding: 2 10 2 10px;
+    border-bottom-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
 }
