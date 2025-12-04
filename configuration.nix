@@ -21,9 +21,11 @@
 
   # Set your time zone.
  time.timeZone = "Europe/Oslo";
-  services = {
- 	 displayManager.sddm.enable = true;
- 	 displayManager.sddm.wayland.enable = true;
+  services.displayManager = {
+ 	 sddm.enable = true;
+ 	 sddm.wayland.enable = true;
+   autoLogin.enable = true;
+   autoLogin.user = "fredrik";
   };
 
   programs.hyprland = {
