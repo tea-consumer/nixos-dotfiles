@@ -8,8 +8,8 @@
 		enable = true;
 		shellAliases = {
 			btw = "echo i use nix btw";
-			retest = "sudo nixos-rebuild test --flake /etc/nixos#nixos";
-			renix = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+			retest = "sudo nixos-rebuild test --flake  ~/nixos-dotfiles#nixos";
+			renix = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos";
 		};
 	};
 	home.file.".config/hypr".source = ./other-dotfiles/hypr;
