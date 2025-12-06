@@ -12,16 +12,28 @@
 			url = "github:youwen5/zen-browser-flake";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    dankMaterialShell = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.dgop.follows = "dgop";
+    };
 	};
 
-	outputs = inputs@{self, nixpkgs, home-manager, zen-browser, dolphin-overlay, ...}: {
+	outputs = inputs@{self, nixpkgs, home-manager, zen-browser, dolphin-overlay, dankMaterialShell, dgop, ...}: {
 
 		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+			specialArgs = { inherit inputs; };
+			
 			modules = [
+				
 				./configuration.nix
 				{
 				nixpkgs.overlays = [ dolphin-overlay.overlays.default ];
-				_module.args = { inherit inputs; };
 				}
 				home-manager.nixosModules.home-manager
 				{

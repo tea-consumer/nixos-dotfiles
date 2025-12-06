@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
+      inputs.dankMaterialShell.nixosModules.dankMaterialShell
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -28,12 +29,7 @@
    autoLogin.user = "fredrik";
   };
 
-  programs.hyprland = {
-	enable = true;
-	xwayland.enable = true;
-	
-  };
-
+ 
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -81,7 +77,11 @@
    ];
  };
 
-   programs.firefox.enable = true;
+  programs.firefox = {
+  enable = true;
+  package = pkgs.firefox;
+  nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
+  };
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -113,22 +113,45 @@
      vscodium
      btop
      rose-pine-cursor
+     quickshell
+     libsForQt5.qt5ct
+     firefoxpwa
    ];
-   
-   xdg.portal = {
+  
+  environment.sessionVariables = {
+    QT_QPA_PLATFORM = "wayland";
+    QT_QPA_PLATFORMTHEME="qt5ct";
+  };
+  nixpkgs.config.qt5 = {
     enable = true;
-    config = {
-      hyprland = {
-        default = [
-          "hyprland"
-          "kde"
-        ];
-      };
-    };
-    configPackages = with pkgs; [
-      xdg-desktop-portal-hyprland
-      kdePackages.xdg-desktop-portal-kde
-    ];
+    platformTheme = "qt5ct"; 
+  };
+
+   programs.hyprland = {
+	enable = true;
+	xwayland.enable = true;
+	
+  };
+
+  programs.dankMaterialShell.enable = true;
+
+
+
+
+  xdg.portal = {
+   enable = true;
+   config = {
+     hyprland = {
+       default = [
+         "hyprland"
+         "kde"
+       ];
+     };
+   };
+   configPackages = with pkgs; [
+     xdg-desktop-portal-hyprland
+     kdePackages.xdg-desktop-portal-kde
+   ];
   };
 
 
