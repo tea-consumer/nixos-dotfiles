@@ -1,0 +1,9 @@
+{
+  "commandRunner": {
+    "enabled": true,
+    "history": [
+      "echo hi",
+      "btop"
+    ]
+  }
+}

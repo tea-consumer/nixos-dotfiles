@@ -14,5 +14,6 @@
 	};
 	home.file.".config/hypr".source = ./other-dotfiles/hypr;
 	home.file.".config/waybar".source = ./other-dotfiles/waybar;
+	home.file.".config/DankMaterialShell".source = ./other-dotfiles/DankMaterialShell
 	
 }
