@@ -1,0 +1,3 @@
+[submodule "other-dotfiles/DankMaterialShell/plugins/commandRunner"]
+	path = other-dotfiles/DankMaterialShell/plugins/commandRunner
+	url = https://github.com/devnullvoid/dms-command-runner.git
