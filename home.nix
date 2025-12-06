@@ -8,12 +8,12 @@
 		enable = true;
 		shellAliases = {
 			btw = "echo i use nix btw test";
-			retest = "sudo nixos-rebuild test --flake  ~/nixos-dotfiles#nixos";
-			renix = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos";
+			retest = "sudo nixos-rebuild test --flake  ~/nixos-dotfiles#nixos --impure";
+			renix = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos --impure";
 		};
 	};
 	home.file.".config/hypr".source = ./other-dotfiles/hypr;
 	home.file.".config/waybar".source = ./other-dotfiles/waybar;
-	home.file.".config/DankMaterialShell".source = ./other-dotfiles/DankMaterialShell
+	home.file.".config/DankMaterialShell".source = ./other-dotfiles/DankMaterialShell;
 	
 }
