@@ -14,9 +14,12 @@
 	};
 	home.file.".config/hypr".source = ./other-dotfiles/hypr;
 	home.file.".config/waybar".source = ./other-dotfiles/waybar;
-	 home.file.".config/DankMaterialShell".source = builtins.filterSource
-    (path: type: type != "directory" || builtins.baseNameOf path != ".git")
-    ./other-dotfiles/DankMaterialShell;
-
-	
+	home.file.".config/DankMaterialShell".source = builtins.path {
+  		name = "dms-filtered-source";
+  		path = ./other-dotfiles/DankMaterialShell;
+  		filter = (path: type:
+    # Keep everything that is NOT a .git directory
+    		type != "directory" || builtins.baseNameOf path != ".git"
+  		);
+	};
 }
