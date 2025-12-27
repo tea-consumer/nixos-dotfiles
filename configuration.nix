@@ -4,16 +4,23 @@
 
 { config, lib, pkgs, inputs, ... }:
 
-{
+{ 
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      inputs.dankMaterialShell.nixosModules.dankMaterialShell
     ];
 
+  
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia.open = true;  # see the note above
+  
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  #boot.kernelParams = [ "quiet" "splash" "console=/dev/null" ];
+  #boot.plymouth.enable = true;
 
   # networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -57,13 +64,13 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  services.pulseaudio.enable = true;
-  services.pipewire.enable = lib.mkForce false;
+  #services.pulseaudio.enable = true;
+  #services.pipewire.enable = lib.mkForce false;
   # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
+  services.pipewire = {
+    enable = true;
+    pulse.enable = true;
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
@@ -71,6 +78,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
  users.users.fredrik = {
    isNormalUser = true;
+   shell = pkgs.zsh;
    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
    packages = with pkgs; [
      tree
@@ -85,59 +93,85 @@
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
-	programs.steam = {
+
+  programs.steam = {
   		enable = true;
  		remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   		dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   		localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
 	};	
-    nixpkgs.config.allowUnfree = true;
-    environment.sessionVariables.NIXOS_OZONE_WL = "1";
-    environment.systemPackages = with pkgs; [
-     wmenu
-     wl-clipboard
-     vim
-     wget
-     kitty
-     waybar
-     git
-     rofi
-     hyprpaper
-     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-     pavucontrol
-     kdePackages.dolphin
-     rose-pine-hyprcursor
-     cliphist
-     kdePackages.kate
-     hyprpolkitagent
-     vscodium
-     btop
-     rose-pine-cursor
-     quickshell
-     libsForQt5.qt5ct
-     firefoxpwa
-   ];
   
-  environment.sessionVariables = {
-    QT_QPA_PLATFORM = "wayland";
-    QT_QPA_PLATFORMTHEME="qt5ct";
+  programs.gamescope = {
+  enable = true;
+  capSysNice = true;
   };
-  nixpkgs.config.qt5 = {
+
+  programs.steam.gamescopeSession.enable = true;
+  nixpkgs.config.allowUnfree = true;
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.systemPackages = with pkgs; [
+    wmenu
+    wl-clipboard
+    vim
+    wget
+    kitty
+    git
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    pavucontrol
+    kdePackages.dolphin
+    rose-pine-hyprcursor
+    cliphist
+    hyprpolkitagent
+    vscodium
+    btop
+    rose-pine-cursor
+    quickshell
+    kdePackages.qt6ct
+    kdePackages.qt5compat
+    firefoxpwa
+    hyprshot
+    discord
+    playerctl
+    direnv
+    spotify
+    python312
+    python312Packages.conda
+    triton
+    hyprlandPlugins.hyprsplit
+    rimsort
+    fastfetch
+    adw-gtk3
+    nautilus
+    kdePackages.kate
+    zplug
+    zsh-z
+    zsh-powerlevel10k
+   ];
+
+  programs.hyprland = {
+	  enable = true;
+    xwayland.enable = true;
+	};
+
+  programs.dms-shell = {
     enable = true;
-    platformTheme = "qt5ct"; 
+    quickshell.package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
+    
+    # Optional feature toggles
+
+    enableSystemMonitoring = true;     # System monitoring widgets (dgop)
+    enableClipboard = true;            # Clipboard history manager
+    enableVPN = true;                  # VPN management widget
+    enableDynamicTheming = true;       # Wallpaper-based theming (matugen)
+    enableAudioWavelength = true;      # Audio visualizer (cava)
+    enableCalendarEvents = true;       # Calendar integration (khal)
   };
 
-   programs.hyprland = {
-	enable = true;
-	xwayland.enable = true;
-	
+  programs.zsh = {
+    enable = true;
   };
 
-  programs.dankMaterialShell.enable = true;
-
-
-
-
+  
   xdg.portal = {
    enable = true;
    config = {
@@ -153,6 +187,16 @@
      kdePackages.xdg-desktop-portal-kde
    ];
   };
+
+
+  nixpkgs.config.qt6 = {
+    enable = true;
+    platformTheme = "qt6ct"; 
+    style = {
+      name = "Matugen";
+    };
+};
+
 
 
    nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -203,5 +247,13 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
 
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      zlib
+      # Add other libraries here if needed
+    ];
+  };
 }
 
