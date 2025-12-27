@@ -33,7 +33,7 @@ programs.zsh = {
 
   initContent = ''
     # Embedded Powerlevel10k config
-    ${builtins.readFile /home/fredrik/nixos-dotfiles/other-dotfiles/zsh/.p10k.zsh}
+    ${builtins.readFile ./other-dotfiles/zsh/.p10k.zsh}
     fastfetch
   '';
 
@@ -54,5 +54,5 @@ programs.zsh = {
   # Remove the hypr file copy since we're now managing it through home-manager
   # home.file.".config/hypr".source = ./other-dotfiles/hypr;
 
-  home.file.".config/kitty".source = /home/fredrik/nixos-dotfiles/other-dotfiles/kitty;
+  home.file.".config/kitty".source = ./other-dotfiles/kitty;
 }

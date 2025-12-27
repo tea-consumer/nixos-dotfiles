@@ -95,10 +95,10 @@
   # You can use https://search.nixos.org/ to find more packages (and options).
 
   programs.steam = {
-  		enable = true;
+  	enable = true;
  		remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  		dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  		localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  	localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
 	};	
   
   programs.gamescope = {
@@ -130,7 +130,6 @@
     kdePackages.qt5compat
     firefoxpwa
     hyprshot
-    discord
     playerctl
     direnv
     spotify
@@ -146,6 +145,8 @@
     zplug
     zsh-z
     zsh-powerlevel10k
+    vesktop
+    imv
    ];
 
   programs.hyprland = {
@@ -171,6 +172,7 @@
     enable = true;
   };
 
+  environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
   
   xdg.portal = {
    enable = true;

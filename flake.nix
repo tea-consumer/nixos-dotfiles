@@ -37,8 +37,8 @@
     dgop,
     hyprland,
     split-monitor-workspaces,
-    ...
-  }:let
+    ...}:
+    let
     system = "x86_64-linux"; 
     in {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
