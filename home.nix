@@ -55,4 +55,5 @@ programs.zsh = {
   # home.file.".config/hypr".source = ./other-dotfiles/hypr;
 
   home.file.".config/kitty".source = ./other-dotfiles/kitty;
+  home.file.".config/dolphinrc".source = ./other-dotfiles/dolphinrc;
 }
