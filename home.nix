@@ -34,6 +34,7 @@ programs.zsh = {
   initContent = ''
     # Embedded Powerlevel10k config
     ${builtins.readFile /home/fredrik/nixos-dotfiles/other-dotfiles/zsh/.p10k.zsh}
+    fastfetch
   '';
 
   oh-my-zsh = {
