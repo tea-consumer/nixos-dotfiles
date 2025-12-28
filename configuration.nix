@@ -32,8 +32,8 @@
   services.displayManager = {
  	 sddm.enable = true;
  	 sddm.wayland.enable = true;
-   autoLogin.enable = true;
-   autoLogin.user = "fredrik";
+   #autoLogin.enable = true;
+   #autoLogin.user = "fredrik";
   };
 
  
@@ -107,6 +107,7 @@
   };
 
   programs.steam.gamescopeSession.enable = true;
+
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.systemPackages = with pkgs; [
