@@ -1,8 +1,8 @@
 { config, pkgs, inputs, ... }:
 
-{
-  home.username = "fredrik";
-  home.homeDirectory = "/home/fredrik";
+{ #Change the USERNAME to the name you want
+  home.username = "USERNAME";
+  home.homeDirectory = "/home/USERNAME";
   home.stateVersion = "25.05";
 
 programs.zsh = {

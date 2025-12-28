@@ -1,5 +1,5 @@
 {
-  description = "vm nix fun";
+  description = "FLAKE TEMPLATE";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -54,7 +54,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.fredrik = import ./home.nix;
+            users.USERNAME = import ./home.nix; #Change USERNAME to the name you want
             backupFileExtension = "backup";
             extraSpecialArgs = { inherit inputs; }; # Pass inputs to home-manager
           };

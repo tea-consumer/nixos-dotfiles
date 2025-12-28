@@ -5,43 +5,56 @@
 { config, lib, pkgs, inputs, ... }:
 
 { 
+  ######################
+  ## DRIVERS AND BOOT ##
+  ######################
+
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
     ];
 
+  # NVIDIA DRIVERS:
+  #hardware.graphics.enable = true;
+  #services.xserver.videoDrivers = [ "nvidia" ];
+  #hardware.nvidia.open = true; 
   
-  hardware.graphics.enable = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.open = true;  # see the note above
-  
+  #BOOT:
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  #boot.loader.systemd-boot.enable = true;
+  #boot.loader.efi.canTouchEfiVariables = true;
+
+  #Use the grub boot loader for bios systems
+  #boot.loader.grub.device = "dev/" #set the boot disk
 
   #boot.kernelParams = [ "quiet" "splash" "console=/dev/null" ];
   #boot.plymouth.enable = true;
 
+  
+
+  ############
+  ## SYSTEM ##
+  ############
+
+  #NETWORKING:
   # networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
-  # Set your time zone.
- time.timeZone = "Europe/Oslo";
-  services.displayManager = {
- 	 sddm.enable = true;
- 	 sddm.wayland.enable = true;
-   #autoLogin.enable = true;
-   #autoLogin.user = "fredrik";
-  };
-
- 
-
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  # Set your time zone.
+  time.timeZone = "Europe/Oslo";
+  services.displayManager = {
+ 	 sddm.enable = true;
+ 	 sddm.wayland.enable = true;
+   #autoLogin.enable = true;
+   #autoLogin.user = "USERNAME";
+  };
+  
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
   # console = {
@@ -49,16 +62,8 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
-
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
-
   
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -76,14 +81,18 @@
   # services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
- users.users.fredrik = {
+  users.users.USERNAME = { #set this before first switch
    isNormalUser = true;
    shell = pkgs.zsh;
-   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+   extraGroups = [ "wheel" "libvirtd" ]; # Enable ‘sudo’ for the user.
    packages = with pkgs; [
      tree
    ];
  };
+
+  ##############
+  ## PROGRAMS ##
+  ##############
 
   programs.firefox = {
   enable = true;
@@ -91,15 +100,13 @@
   nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   };
 
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
 
-  programs.steam = {
-  	enable = true;
- 		remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  	localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-	};	
+  #programs.steam = {
+  #	enable = true;
+ 	#	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  #	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  #	localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+	#};	
   
   programs.gamescope = {
   enable = true;
@@ -133,22 +140,21 @@
     hyprshot
     playerctl
     direnv
-    spotify
-    python312
-    python312Packages.conda
-    triton
+    #spotify
     hyprlandPlugins.hyprsplit
-    rimsort
     fastfetch
     adw-gtk3
-    nautilus
-    kdePackages.kate
     zplug
     zsh-z
     zsh-powerlevel10k
-    vesktop
+    #vesktop #discord 
     imv
+    #dnsmasq
    ];
+
+  #############
+  ## DESKTOP ##
+  #############
 
   programs.hyprland = {
 	  enable = true;
@@ -198,15 +204,39 @@
     style = {
       name = "Matugen";
     };
-};
+  };
 
 
 
-   nix.settings.experimental-features = ["nix-command" "flakes"];
 
    fonts.packages = with pkgs; [
     	nerd-fonts.jetbrains-mono
     ];
+
+  ####################
+  ## Virtualisation ##
+  ####################
+
+  #virtualisation.libvirtd = {
+  #  enable = true;
+  #  # Allow passwordless access for users in libvirtd group
+  #  onBoot = "ignore";
+  #  onShutdown = "shutdown";
+  #  extraConfig = ''
+  #    unix_sock_group = "libvirtd"
+  #    unix_sock_ro_perms = "0777"
+  #    unix_sock_rw_perms = "0770"
+  #    auth_unix_ro = "none"
+  #    auth_unix_rw = "none"
+  #  '';
+  #};
+  #programs.virt-manager.enable = true;
+  #virtualisation.libvirtd.qemu = {
+  #  swtpm.enable = true;
+  #};
+
+  
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
