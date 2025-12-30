@@ -70,6 +70,9 @@
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
+  # enable automounting for flashdrives.
+  services.udisks2.enable = true;
+
   # Enable sound.
   #services.pulseaudio.enable = true;
   #services.pipewire.enable = lib.mkForce false;
