@@ -43,29 +43,28 @@
     };
   };
 
+  # automounting and privlige utility.
   services.udiskie = {
     enable = true;
     settings = {
         # workaround for
         # https://github.com/nix-community/home-manager/issues/632
         program_options = {
-            # replace with your favorite file manager
-            file_manager = "${pkgs.kdePackages.dolphin}/bin/dolphin";
+            file_manager = "${pkgs.kdePackages.dolphin}/bin/dolphin"; # replace with your favorite file manager | uses kde Dolphin by default
         };
     };
   };
   # Configure Hyprland through home-manager
   wayland.windowManager.hyprland = {
     enable = true;
-    # Use your existing configuration files
+    # Uses existing configuration files from the other-dotfiles directory
     extraConfig = builtins.readFile ./other-dotfiles/hypr/hyprland.conf;
     # Enable the split-monitor-workspaces plugin
     plugins = [ pkgs.hyprlandPlugins.hyprsplit ];
   };
 
-  # Remove the hypr file copy since we're now managing it through home-manager
-  # home.file.".config/hypr".source = ./other-dotfiles/hypr;
-
+  # Creates symlinks to configuration files from other dotfiles in the repo
+  # syntax: home.file"<target>".source = <configuration>;  <- DON'T forget semicolon1
   home.file.".config/kitty".source = ./other-dotfiles/kitty;
   home.file.".config/dolphinrc".source = ./other-dotfiles/dolphinrc;
-}
+} 
