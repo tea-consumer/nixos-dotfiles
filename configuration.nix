@@ -12,6 +12,8 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
+      #./NixModules/laptop.nix
+
     ];
 
   # NVIDIA DRIVERS:
@@ -161,6 +163,7 @@
     xwayland.enable = true;
 	};
 
+  programs.dsearch.enable = true;
   programs.dms-shell = {
     enable = true;
     quickshell.package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
