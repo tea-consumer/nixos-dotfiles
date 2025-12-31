@@ -29,7 +29,11 @@
   #Use the grub boot loader for bios systems
   #boot.loader.grub.device = "dev/" #set the boot disk
 
-  #boot.kernelParams = [ "quiet" "splash" "console=/dev/null" ];
+  #boot.kernelParams = [ 
+  #  "quiet" 
+  #  "splash"
+  #  "console=tty0"
+  # ];
   #boot.plymouth.enable = true;
 
   
@@ -43,19 +47,38 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  
+  # Set your time zone.
+  time.timeZone = "Europe/Oslo";
+
+  #display manager
+
+  services.displayManager.dms-greeter = {
+    enable = true;
+    compositor.name = "hyprland";
+    configHome = "/home/fredrik";
+    quickshell.package = pkgs.quickshell;
+  };
+
+  #services.displayManager.dms-greeter = {
+  #  enable = true;
+  #  compositor.name = "hyprland";
+  #  configHome = "/home/fredrik";
+  #  quickshell.package = pkgs.quickshell;
+  #};
+
+  #services.displayManager = {
+ 	# sddm.enable = true;
+ 	# sddm.wayland.enable = true;
+  # autoLogin.enable = true;
+  # autoLogin.user = "fredrik";
+  #};
+
+
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Set your time zone.
-  time.timeZone = "Europe/Oslo";
-  services.displayManager = {
- 	 sddm.enable = true;
- 	 sddm.wayland.enable = true;
-   #autoLogin.enable = true;
-   #autoLogin.user = "USERNAME";
-  };
   
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
