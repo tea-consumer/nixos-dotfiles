@@ -13,6 +13,7 @@
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       #./NixModules/laptop.nix
+      #./NixModules/userPkgs.nix
 
     ];
 
@@ -29,13 +30,7 @@
   #Use the grub boot loader for bios systems
   #boot.loader.grub.device = "dev/" #set the boot disk
 
-  #boot.kernelParams = [ 
-  #  "quiet" 
-  #  "splash"
-  #  "console=tty0"
-  # ];
-  #boot.plymouth.enable = true;
-
+  #boot.kernelParams = [ "quiet" "loglevel=0" "console=tty0" ]; 
   
 
   ############
@@ -47,38 +42,29 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
   # Set your time zone.
   time.timeZone = "Europe/Oslo";
 
-  #display manager
+  #greeter configuration
 
   services.displayManager.dms-greeter = {
     enable = true;
     compositor.name = "hyprland";
-    configHome = "/home/fredrik";
+    configHome = "/home/USERNAME";
     quickshell.package = pkgs.quickshell;
   };
-
-  #services.displayManager.dms-greeter = {
-  #  enable = true;
-  #  compositor.name = "hyprland";
-  #  configHome = "/home/fredrik";
-  #  quickshell.package = pkgs.quickshell;
-  #};
 
   #services.displayManager = {
  	# sddm.enable = true;
  	# sddm.wayland.enable = true;
   # autoLogin.enable = true;
-  # autoLogin.user = "fredrik";
+  # autoLogin.user = "USERNAME";
   #};
-
-
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
@@ -91,10 +77,23 @@
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+  
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      cups-filters
+      cups-browsed
+    ];
+  };
 
   # enable automounting for flashdrives.
   services.udisks2.enable = true;
+
 
   # Enable sound.
   #services.pulseaudio.enable = true;
@@ -125,57 +124,34 @@
   programs.firefox = {
   enable = true;
   package = pkgs.firefox;
-  nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   };
-
-
-  #programs.steam = {
-  #	enable = true;
- 	#	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  #	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  #	localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-	#};	
-  
-  programs.gamescope = {
-  enable = true;
-  capSysNice = true;
-  };
-
-  programs.steam.gamescopeSession.enable = true;
 
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.systemPackages = with pkgs; [
     wmenu
     wl-clipboard
-    vim
     wget
     kitty
     git
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     pavucontrol
     kdePackages.dolphin
     rose-pine-hyprcursor
-    cliphist
-    hyprpolkitagent
-    vscodium
-    btop
     rose-pine-cursor
+    cliphist
+    btop
     quickshell
     kdePackages.qt6ct
     kdePackages.qt5compat
-    firefoxpwa
-    hyprshot
     playerctl
     direnv
-    #spotify
     hyprlandPlugins.hyprsplit
+    hyprpolkitagent
     fastfetch
     adw-gtk3
     zplug
     zsh-z
     zsh-powerlevel10k
-    #vesktop #discord 
     imv
     #dnsmasq
    ];
