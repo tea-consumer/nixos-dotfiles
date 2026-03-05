@@ -1,9 +1,55 @@
-{ config, pkgs, inputs, ... }:
+# Home Manager Configuration
+# ==========================
+# User-level configuration for applications, shell, and desktop environment.
+# This file is imported by configuration.nix through home-manager integration.
+#
+# IMPORTANT: Search and replace all instances of YOUR_USERNAME with your actual username!
 
-{ #Change the USERNAME to the name you want
-  home.username = "USERNAME";
-  home.homeDirectory = "/home/USERNAME";
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
+
+{
+  #############################################################################
+  ## HOME MANAGER SETTINGS                                                   ##
+  ## Basic home manager configuration                                        ##
+  #############################################################################
+
+  home.username = "YOUR_USERNAME";
+  home.homeDirectory = "/home/YOUR_USERNAME";
   home.stateVersion = "25.05";
+
+  #############################################################################
+  ## SERVICES                                                                ##
+  ## User-level services                                                     ##
+  #############################################################################
+
+  # GNOME Keyring
+  # -------------
+  # Secret storage for passwords and encryption keys
+  services.gnome-keyring.enable = true;
+  home.packages = [ pkgs.gcr ]; # org.gnome.keyring.SystemPrompter
+
+  # Udiskie
+  # -------
+  # Automatic mounting of removable media
+  services.udiskie = {
+    enable = true;
+    settings = {
+      program_options = {
+        file_manager = "${pkgs.kdePackages.dolphin}/bin/dolphin";
+      };
+    };
+  };
+
+  #############################################################################
+  ## SHELL                                                                   ##
+  ## Zsh configuration with plugins and aliases                              ##
+  #############################################################################
 
   programs.zsh = {
     enable = true;
@@ -11,18 +57,27 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
+    # Shell Aliases
+    # -------------
     shellAliases = {
       btw = "echo i use nix btw test";
       retest = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos --impure";
       renix = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos --impure";
     };
 
+    # History
+    # -------
     history.size = 10000;
     history.ignoreAllDups = true;
     history.path = "$HOME/.zsh_history";
-    history.ignorePatterns = [ "rm *" "pkill *" "cp *" ];
+    history.ignorePatterns = [
+      "rm *"
+      "pkill *"
+      "cp *"
+    ];
 
-
+    # Plugins
+    # -------
     plugins = [
       {
         name = "powerlevel10k";
@@ -31,40 +86,59 @@
       }
     ];
 
+    # Init Content
+    # ------------
+    # Source p10k config and show system info on shell start
     initContent = ''
-      # Embedded Powerlevel10k config
       ${builtins.readFile ./other-dotfiles/zsh/.p10k.zsh}
       fastfetch
     '';
 
+    # Oh My Zsh
+    # ---------
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "z" ];
+      plugins = [
+        "git"
+        "z"
+      ];
     };
   };
 
-  # automounting and privlige utility.
-  services.udiskie = {
-    enable = true;
-    settings = {
-        # workaround for
-        # https://github.com/nix-community/home-manager/issues/632
-        program_options = {
-            file_manager = "${pkgs.kdePackages.dolphin}/bin/dolphin"; # replace with your favorite file manager | uses kde Dolphin by default
-        };
-    };
-  };
-  # Configure Hyprland through home-manager
+  #############################################################################
+  ## WINDOW MANAGER                                                          ##
+  ## Hyprland configuration                                                  ##
+  #############################################################################
+
   wayland.windowManager.hyprland = {
     enable = true;
-    # Uses existing configuration files from the other-dotfiles directory
-    extraConfig = builtins.readFile ./other-dotfiles/hypr/hyprland.conf;
-    # Enable the split-monitor-workspaces plugin
-    plugins = [ pkgs.hyprlandPlugins.hyprsplit ];
+
+    # Plugins
+    # -------
+    # Built from flake input to match running Hyprland version
+    plugins = [
+      inputs.hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hyprsplit
+    ];
+
+    # Extra Config
+    # ------------
+    # Home-Manager owns the main config file, DMS owns the sourced file
+    # Changes to sourced file are picked up by `hyprctl reload`
+    extraConfig = ''
+      source = /home/YOUR_USERNAME/nixos-dotfiles/other-dotfiles/hypr/hyprland.conf
+    '';
+
+    # Systemd Integration
+    # -------------------
+    # Exposes all systemd env vars for portals and D-Bus
+    systemd.variables = [ "--all" ];
   };
 
-  # Creates symlinks to configuration files from other dotfiles in the repo
-  # syntax: home.file"<target>".source = <configuration>;  <- DON'T forget semicolon1
-  home.file.".config/kitty".source = ./other-dotfiles/kitty;
+  #############################################################################
+  ## CONFIGURATION FILES                                                     ##
+  ## User application config files                                           ##
+  #############################################################################
+
+  # Dolphin file manager configuration
   home.file.".config/dolphinrc".source = ./other-dotfiles/dolphinrc;
-} 
+}

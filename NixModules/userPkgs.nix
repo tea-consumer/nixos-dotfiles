@@ -1,41 +1,153 @@
-{ config, lib, pkgs, inputs, ... }:
+# User-Specific Packages and Services
+# ===================================
+# This module contains user-specific applications, gaming setup, and personal utilities.
+# These are separate from system-wide configuration in configuration.nix.
+#
+# IMPORTANT: All services and packages below are commented out as examples.
+# Uncomment the sections you want to enable for your system.
 
 {
-  environment.systemPackages = with pkgs; [ # Place the packages you want to install bellow
-    #vim
-    #inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-    #vscodium
-    #firefoxpwa
-    #vesktop #discord 
-    #spotify
-    #libreoffice-qt
-    #hunspell
-    #hunspellDicts.nb_NO
-    #hunspellDicts.nn_NO
-    #hunspellDicts.en_US
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
+
+{
+  #############################################################################
+  ## GAMING                                                                  ##
+  ## Steam, Proton, game launchers, and gaming utilities                    ##
+  #############################################################################
+
+  # Steam Configuration
+  # -------------------
+  # Steam is the primary gaming platform with Proton for Windows games
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true; # Steam Remote Play streaming
+  #   dedicatedServer.openFirewall = true; # Source Dedicated Server hosting
+  #   localNetworkGameTransfers.openFirewall = true; # Local network game transfers
+  #   protontricks.enable = true; # Winetricks GUI for Proton
+  #   gamescopeSession.enable = true; # Big Picture mode with Gamescope
+  # };
+
+  # Proton-GE - Custom Proton build with additional fixes
+  # programs.steam.extraCompatPackages = with pkgs; [ proton-ge-bin ];
+
+  # GameMode - System optimizer for gaming
+  # programs.gamemode.enable = true;
+
+  # Gamescope
+  # ---------
+  # SteamOS session compositing window manager with HDR support
+  # programs.gamescope = {
+  #   enable = true;
+  #   capSysNice = true; # Higher process priority for smoother gaming
+  # };
+
+  #############################################################################
+  ## HARDWARE CONTROL                                                        ##
+  ## System monitoring, RGB lighting, and cooling control                    ##
+  #############################################################################
+
+  # Kernel module for NCT6775 hardware monitoring chip
+  # boot.kernelModules = [ "nct6775" ];
+
+  # CoolerControl - GUI for fan and cooling management
+  # programs.coolercontrol.enable = true;
+  # services.lm_sensors.enable = true; # Sensor detection
+  # services.coolercontrold.enable = true; # CoolerControl daemon
+
+  # OpenRGB - RGB lighting control
+  # services.hardware.openrgb.enable = true;
+
+  #############################################################################
+  ## SYSTEM INTEGRATION                                                      ##
+  ## Flatpak support, device connectivity, and binary compatibility          ##
+  #############################################################################
+
+  # Flatpak - Universal Linux application distribution
+  # services.flatpak.enable = true;
+
+  # KDE Connect - Desktop and mobile device integration
+  # programs.kdeconnect.enable = true;
+
+  # Nix-ld
+  # ------
+  # Run non-NixOS dynamically linked binaries
+  # Provides FHS-compatible dynamic linker for proprietary games and apps
+  # programs.nix-ld = {
+  #   enable = true;
+  #   libraries = with pkgs; [
+  #     # Audio
+  #     alsa-lib
+  #     # Graphics and display
+  #     wayland
+  #     libxkbcommon
+  #     libGL
+  #     vulkan-loader
+  #     # X11 libraries
+  #     libx11
+  #     libxcb
+  #     libxcursor
+  #     libxrandr
+  #     libxi
+  #     # Fonts
+  #     fontconfig
+  #     freetype
+  #   ];
+  # };
+
+  #############################################################################
+  ## USER APPLICATIONS                                                       ##
+  ## Personal applications organized by category                             ##
+  #############################################################################
+
+  environment.systemPackages = with pkgs; [
+    # Browsers
+    # inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default # Zen browser
+    # chromium # Open-source web browser
+
+    # Development
+    # vscodium # VS Code without telemetry
+    # direnv # Directory-specific environment variables
+    # nixd # Nix language server
+    # nil # Alternative Nix language server
+
+    # Media
+    # spotify # Music streaming
+    # vlc # Universal media player
+    # ffmpeg # Audio/video processing
+
+    # Communication
+    # discord # Voice and text chat
+    # vesktop # Alternative Discord client
+
+    # Productivity
+    # bitwarden-desktop # Password manager
+    # geogebra # Dynamic mathematics software
+    # geogebra6 # Classic Geogebra version
+
+    # Creative
+    # davinci-resolve # Professional video editing
+
+    # Gaming
+    # lutris # Game launcher
+    # bottles # Wine/Proton prefix manager
+    # starsector # Space exploration game
+    # rimsort # RimWorld mod manager
+    # ckan # Kerbal Space Program mod manager
+    # mangohud # Vulkan/OpenGL overlay
+    # winetricks # Wine utility
+    # wine64 # Windows compatibility layer
+
+    # Utilities
+    # firefoxpwa # Firefox PWA runtime
+    # imv # Minimal image viewer
+    # file # File type identification
+    # xkill # Kill X11 windows
+    # lm_sensors # Hardware sensors
+    # openrgb # RGB lighting control
   ];
-
-  #programs.firefox = {
-  # nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
-  #};
-
-
-
-
-
-  #programs.steam = {
-  #	enable = true;
- 	#	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  #	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  #	localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-	#};	
-
-  
-  #programs.gamescope = {
-  #enable = true;
-  #capSysNice = true;
-  #};
-
-  #programs.steam.gamescopeSession.enable = true;
-
 }
