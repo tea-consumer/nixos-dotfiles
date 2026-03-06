@@ -222,6 +222,7 @@
     # Essential utilities
     wget # File downloader
     git # Version control
+    direnv # Directory-specific environment variables
 
     # Terminal
     kitty # GPU-accelerated terminal emulator
@@ -248,6 +249,7 @@
     quickshell # Qt-based shell components
     kdePackages.qt6ct # Qt6 configuration tool
     kdePackages.qt5compat # Qt5 compatibility for Qt6
+    libsForQt5.qt5ct # Qt5 configuration tool
 
     # Polkit authentication agent
     hyprpolkitagent # GUI for privilege escalation prompts
@@ -261,7 +263,7 @@
     zsh-powerlevel10k # Zsh theme
 
     # Networking
-    dnsmasq # Lightweight DNS forwarder/DHCP server
+    # dnsmasq # Lightweight DNS forwarder/DHCP server
   ];
 
   # Nix Download Settings
@@ -289,10 +291,10 @@
     enable = true;
 
     # Systemd integration for auto-start and service management
-    systemd = {
-      enable = true; # Run as systemd service
-      restartIfChanged = true; # Auto-restart on config changes
-    };
+    # systemd = {
+    #   enable = true; # Run as systemd service
+    #   restartIfChanged = true; # Auto-restart on config changes
+    # };
 
     # Feature flags
     enableSystemMonitoring = true; # CPU/RAM widgets (dgop)
@@ -300,9 +302,9 @@
     enableDynamicTheming = true; # Auto-theming from wallpaper (matugen)
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
-    enableClipboardPaste = true; # Clipboard history pasting (wtype)
+    # enableClipboardPaste = true; # Clipboard history pasting (wtype) (deprecated)
 
-    # Quickshell package from flake input
+    # Use quickshell from flake input for latest features
     quickshell.package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
   };
 
@@ -365,38 +367,25 @@
   ## Virtual machines and container configuration                            ##
   #############################################################################
 
-  # libvirt / KVM Virtual Machines
-  # ------------------------------
-  # libvirt provides VM management; KVM provides hardware virtualization
-  virtualisation.libvirtd = {
-    enable = true;
-
-    # VM behavior on host boot/shutdown
-    onBoot = "ignore"; # Don't auto-start VMs
-    onShutdown = "shutdown"; # Gracefully shutdown VMs
-
-    # Socket permissions for users in libvirtd group
-    # Allows passwordless VM management for group members
-    extraConfig = ''
-      unix_sock_group = "libvirtd"
-      unix_sock_ro_perms = "0777"
-      unix_sock_rw_perms = "0770"
-      auth_unix_ro = "none"
-      auth_unix_rw = "none"
-    '';
-  };
-
-  # Virt-Manager GUI
-  # ----------------
-  # Graphical interface for managing virtual machines
-  programs.virt-manager.enable = true;
-
-  # TPM for Virtual Machines
-  # ------------------------
-  # Software TPM support for Windows 11 and secure VMs
-  virtualisation.libvirtd.qemu = {
-    swtpm.enable = true;
-  };
+  # libvirt / KVM Virtual Machines (currently disabled)
+  # ---------------------------------------------------
+  # Uncomment to enable VM support
+  # virtualisation.libvirtd = {
+  #   enable = true;
+  #   onBoot = "ignore";
+  #   onShutdown = "shutdown";
+  #   extraConfig = ''
+  #     unix_sock_group = "libvirtd"
+  #     unix_sock_ro_perms = "0777"
+  #     unix_sock_rw_perms = "0770"
+  #     auth_unix_ro = "none"
+  #     auth_unix_rw = "none"
+  #   '';
+  # };
+  # programs.virt-manager.enable = true;
+  # virtualisation.libvirtd.qemu = {
+  #   swtpm.enable = true;
+  # };
 
   #############################################################################
   ## MISCELLANEOUS                                                           ##
