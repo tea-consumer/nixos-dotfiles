@@ -39,8 +39,14 @@
     # Video decoding hardware acceleration (currently disabled)
     #./NixModules/videoDecoding.nix
 
+    # Spicetify - Spotify customization
+    #./NixModules/Spicetify.nix
+
     # Zed editor configuration
     # ./NixModules/zed.nix
+
+    # Third-party module providing Spicetify integration
+    #inputs.spicetify-nix.nixosModules.default
   ];
 
   # Graphics Configuration
@@ -78,7 +84,7 @@
 
   # Wireless networking options (choose one):
   # networking.wireless.enable = true;      # Use wpa_supplicant (manual config)
-  # networking.networkmanager.enable = true; # Use NetworkManager (GUI-friendly)
+  networking.networkmanager.enable = true; # Use NetworkManager (GUI-friendly)
 
   # Time Zone
   # ---------
@@ -127,10 +133,25 @@
     "flakes"
   ];
 
+  # Service Discovery
+  # -----------------
+  # Avahi for printer discovery and other devices on the local network
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
   # Print Server
   # ------------
-  # Enable CUPS for printer support (currently disabled)
-  # services.printing.enable = true;
+  # CUPS for printer support with filters
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      cups-filters
+      cups-browsed
+    ];
+  };
 
   # Auto-mounting for Removable Media
   # ----------------------------------

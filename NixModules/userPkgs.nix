@@ -73,6 +73,9 @@
   # KDE Connect - Desktop and mobile device integration
   # programs.kdeconnect.enable = true;
 
+  # GNOME Keyring - Secret storage for passwords
+  # services.gnome.gnome-keyring.enable = true;
+
   # Nix-ld
   # ------
   # Run non-NixOS dynamically linked binaries
@@ -110,22 +113,34 @@
     # chromium # Open-source web browser
 
     # Development
+    # vim # Classic text editor
     # vscodium # VS Code without telemetry
+    # code-cursor # AI-powered code editor
     # direnv # Directory-specific environment variables
     # nixd # Nix language server
     # nil # Alternative Nix language server
+
+    # Office
+    # libreoffice-qt # Office suite
+    # hunspell # Spell checker
+    # hunspellDicts.en_US # English dictionaries
+    # hunspellDicts.nb_NO # Norwegian Bokmål dictionaries
+    # hunspellDicts.nn_NO # Norwegian Nynorsk dictionaries
+
+    # Communication
+    # discord # Voice and text chat
+    # vesktop # Alternative Discord client with Vencord
+
+    # Security
+    # bitwarden-desktop # Password manager
 
     # Media
     # spotify # Music streaming
     # vlc # Universal media player
     # ffmpeg # Audio/video processing
-
-    # Communication
-    # discord # Voice and text chat
-    # vesktop # Alternative Discord client
+    # imv # Minimal image viewer
 
     # Productivity
-    # bitwarden-desktop # Password manager
     # geogebra # Dynamic mathematics software
     # geogebra6 # Classic Geogebra version
 
@@ -144,10 +159,19 @@
 
     # Utilities
     # firefoxpwa # Firefox PWA runtime
-    # imv # Minimal image viewer
     # file # File type identification
     # xkill # Kill X11 windows
     # lm_sensors # Hardware sensors
     # openrgb # RGB lighting control
   ];
+
+  #############################################################################
+  ## FIREFOX CONFIGURATION                                                   ##
+  ## Firefox PWA and native messaging hosts                                  ##
+  #############################################################################
+
+  # PWA for Firefox
+  # programs.firefox = {
+  #   nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
+  # };
 }

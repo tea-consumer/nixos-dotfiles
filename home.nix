@@ -141,4 +141,54 @@
 
   # Dolphin file manager configuration
   home.file.".config/dolphinrc".source = ./other-dotfiles/dolphinrc;
+
+  #############################################################################
+  ## ACTIVATION SCRIPTS                                                      ##
+  ## Copy non-home-managed dotfiles on first activation                      ##
+  #############################################################################
+
+  # On first activation, copy selected non-home-managed dotfiles from ./other-dotfiles
+  # into their expected locations under ~/.config (kitty and DankMaterialShell only),
+  # but only if they don't already exist. This keeps them mutable and not managed by HM.
+  home.activation.copyOtherDotfiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    dotfiles_dir="${config.home.homeDirectory}/nixos-dotfiles/other-dotfiles"
+
+    # Kitty
+    if [ ! -f "${config.home.homeDirectory}/.config/kitty/kitty.conf" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/kitty"
+      cp "$dotfiles_dir/kitty/kitty.conf" \
+         "${config.home.homeDirectory}/.config/kitty/kitty.conf"
+    fi
+
+    if [ ! -f "${config.home.homeDirectory}/.config/kitty/dank-tabs.conf" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/kitty"
+      cp "$dotfiles_dir/kitty/dank-tabs.conf" \
+         "${config.home.homeDirectory}/.config/kitty/dank-tabs.conf"
+    fi
+
+    if [ ! -f "${config.home.homeDirectory}/.config/kitty/dank-theme.conf" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/kitty"
+      cp "$dotfiles_dir/kitty/dank-theme.conf" \
+         "${config.home.homeDirectory}/.config/kitty/dank-theme.conf"
+    fi
+
+    # DankMaterialShell
+    if [ ! -f "${config.home.homeDirectory}/.config/DankMaterialShell/settings.json" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/DankMaterialShell"
+      cp "$dotfiles_dir/DankMaterialShell/settings.json" \
+         "${config.home.homeDirectory}/.config/DankMaterialShell/settings.json"
+    fi
+
+    if [ ! -f "${config.home.homeDirectory}/.config/DankMaterialShell/firefox.css" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/DankMaterialShell"
+      cp "$dotfiles_dir/DankMaterialShell/firefox.css" \
+         "${config.home.homeDirectory}/.config/DankMaterialShell/firefox.css"
+    fi
+
+    if [ ! -f "${config.home.homeDirectory}/.config/DankMaterialShell/plugin_settings.json" ]; then
+      mkdir -p "${config.home.homeDirectory}/.config/DankMaterialShell"
+      cp "$dotfiles_dir/DankMaterialShell/plugin_settings.json" \
+         "${config.home.homeDirectory}/.config/DankMaterialShell/plugin_settings.json"
+    fi
+  '';
 }

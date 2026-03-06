@@ -1,3 +1,8 @@
+# Intel Graphics Configuration
+# ===========================
+# This module configures Intel graphics drivers and hardware video decoding.
+# For NVIDIA GPUs, use ./nvidia.nix instead.
+
 {
   config,
   lib,
@@ -7,44 +12,55 @@
 }:
 
 {
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = true;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable; # Use a stable version.
-  };
+  #############################################################################
+  ## GRAPHICS DRIVER                                                         ##
+  ## Intel integrated and discrete GPU configuration                         ##
+  #############################################################################
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # Use modesetting driver for Intel GPUs
+  services.xserver.videoDrivers = [ "modesetting" ];
 
+  # Graphics Configuration
+  # ----------------------
+  # Enable modern graphics stack with Intel-specific packages
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      nvidia-vaapi-driver # <<< CRITICAL: The only required VAAPI package for NVIDIA[citation:2][citation:10].
+      # Required for modern Intel GPUs (Xe iGPU and ARC)
+      intel-media-driver # VA-API (iHD) userspace
+      vpl-gpu-rt # oneVPL (QSV) runtime
+
+      # Optional (compute / tooling):
+      intel-compute-runtime # OpenCL (NEO) + Level Zero for Arc/Xe
+      # NOTE: 'intel-ocl' also exists as a legacy package; not recommended for Arc/Xe.
+      # libvdpau-va-gl # Only if you must run VDPAU-only apps
     ];
   };
 
-  # Essential environment variables
+  #############################################################################
+  ## ENVIRONMENT VARIABLES                                                   ##
+  ## Required for Intel VAAPI                                                ##
+  #############################################################################
+
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "nvidia";
-    NVD_BACKEND = "direct"; # Use the direct backend for the NVIDIA driver[citation:2][citation:8].
-    # Required to bypass Firefox's security sandbox for the media process (security trade-off)[citation:2][citation:10].
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-    # Wayland/NVIDIA variables for Hyprland
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    WLR_NO_HARDWARE_CURSORS = "1";
+    LIBVA_DRIVER_NAME = "iHD"; # Prefer the modern iHD backend
+    # VDPAU_DRIVER = "va_gl"; # Only if using libvdpau-va-gl
   };
 
-  # Firefox preferences to force-enable features
-  programs.firefox = {
-    enable = true;
-    preferences = {
-      "media.hardware-video-decoding.force-enabled" = true; # Bypass the Mozilla blocklist.
-      "media.ffmpeg.vaapi.enabled" = true;
-      "media.rdd-ffmpeg.enabled" = true;
-      "gfx.x11-egl.force-enabled" = true;
-      "widget.dmabuf.force-enabled" = true;
-      "media.av1.enabled" = false; # Your RTX 2080 Super does not support AV1 hardware decode[citation:2].
-    };
-  };
+  #############################################################################
+  ## KERNEL CONFIGURATION                                                    ##
+  ## Enable GuC firmware for better hardware decoding                        ##
+  #############################################################################
+
+  # May help if FFmpeg/VAAPI/QSV init fails (esp. on Arc with i915)
+  hardware.enableRedistributableFirmware = true;
+  boot.kernelParams = [ "i915.enable_guc=3" ];
+
+  #############################################################################
+  ## PERMISSIONS                                                             ##
+  ## Ensure services can access /dev/dri                                     ##
+  #############################################################################
+
+  # May help services that have trouble accessing /dev/dri (e.g., jellyfin/plex):
+  # users.users.<service>.extraGroups = [ "video" "render" ];
 }
