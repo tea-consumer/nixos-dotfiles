@@ -17,7 +17,7 @@
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland/v0.53.0";
+    hyprland.url = "github:hyprwm/Hyprland/4b07770b9ef1cceb2e6f56d33538aaffb9186b9c";
 
     hyprsplit = {
       url = "github:shezdy/hyprsplit";

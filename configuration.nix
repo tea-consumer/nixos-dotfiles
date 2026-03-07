@@ -39,6 +39,9 @@
     # Virtualization configuration (libvirt/KVM)
     #./NixModules/virtualization.nix
 
+    # Bluetooth configuration
+    #./NixModules/bluetooth.nix
+
     # Video decoding hardware acceleration (currently disabled)
     #./NixModules/videoDecoding.nix
 
@@ -308,11 +311,11 @@
   programs.dms-shell = {
     enable = true;
 
-    # Systemd integration for auto-start and service management
-    # systemd = {
-    #   enable = true; # Run as systemd service
-    #   restartIfChanged = true; # Auto-restart on config changes
-    # };
+    #Systemd integration for auto-start and service management
+    systemd = {
+      enable = true; # Run as systemd service
+      restartIfChanged = true; # Auto-restart on config changes
+    };
 
     # Feature flags
     enableSystemMonitoring = true; # CPU/RAM widgets (dgop)
@@ -320,7 +323,7 @@
     enableDynamicTheming = true; # Auto-theming from wallpaper (matugen)
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
-    # enableClipboardPaste = true; # Clipboard history pasting (wtype) (deprecated)
+    enableClipboardPaste = true; # Clipboard history pasting (wtype)
 
     # Use quickshell from flake input for latest features
     quickshell.package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
@@ -379,31 +382,6 @@
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
   ];
-
-  #############################################################################
-  ## VIRTUALISATION                                                          ##
-  ## Virtual machines and container configuration                            ##
-  #############################################################################
-
-  # libvirt / KVM Virtual Machines (currently disabled)
-  # ---------------------------------------------------
-  # Uncomment to enable VM support
-  # virtualisation.libvirtd = {
-  #   enable = true;
-  #   onBoot = "ignore";
-  #   onShutdown = "shutdown";
-  #   extraConfig = ''
-  #     unix_sock_group = "libvirtd"
-  #     unix_sock_ro_perms = "0777"
-  #     unix_sock_rw_perms = "0770"
-  #     auth_unix_ro = "none"
-  #     auth_unix_rw = "none"
-  #   '';
-  # };
-  # programs.virt-manager.enable = true;
-  # virtualisation.libvirtd.qemu = {
-  #   swtpm.enable = true;
-  # };
 
   #############################################################################
   ## MISCELLANEOUS                                                           ##

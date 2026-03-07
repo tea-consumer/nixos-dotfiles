@@ -1,8 +1,14 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-   #Enables the battery monitoring daemon
-   services.upower.enable = true;
+  #Enables the battery monitoring daemon
+  services.upower.enable = true;
 
   # 1. Set lid-close action to suspend-then-hibernate
   services.logind = {
@@ -12,17 +18,17 @@
   };
 
   # 2. Set the delay before hibernation (e.g., 30 minutes)
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=15m
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "15m";
     # Optionally, ensure deep suspend (more power‑efficient)
-    # SuspendState=mem
-  '';
+    # SuspendState = "mem";
+  };
 
   # 3. (Optional) Ensure deep sleep (S3) instead of s2idle
   boot.kernelParams = [ "mem_sleep_default=deep" ];
 
   services.power-profiles-daemon.enable = false;
-  
+
   services.tlp = {
     enable = true;
     settings = {
@@ -39,7 +45,7 @@
 
       # Optional helps save long term battery health
       START_CHARGE_THRESH_BAT0 = 70; # 40 and below it starts to charge
-      STOP_CHARGE_THRESH_BAT0 = 80;  # 80 and above it stops charging
+      STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
     };
   };
 
