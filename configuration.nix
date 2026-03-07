@@ -36,6 +36,9 @@
     # NVIDIA graphics configuration (enable if you have an NVIDIA GPU)
     #./NixModules/nvidia.nix
 
+    # Virtualization configuration (libvirt/KVM)
+    #./NixModules/virtualization.nix
+
     # Video decoding hardware acceleration (currently disabled)
     #./NixModules/videoDecoding.nix
 
@@ -93,14 +96,29 @@
 
   # Display Manager / Login Screen
   # ------------------------------
+  # SDDM - Simple Desktop Display Manager
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true; # Wayland support
+  };
+
+  # Auto-login configuration (uncomment to enable automatic login)
+  # WARNING: Enabling auto-login bypasses the login screen
+  # services.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "YOUR_USERNAME"; # Replace YOUR_USERNAME with your actual username
+  # };
+
+  # dms-greeter (currently disabled)
+  # --------------------------------
   # dms-greeter is a Wayland-native display manager greeter
   # It handles the login screen and starts your compositor (Hyprland)
-  services.displayManager.dms-greeter = {
-    enable = true;
-    compositor.name = "hyprland"; # Compositor to launch after login
-    configHome = "/home/YOUR_USERNAME"; # Replace YOUR_USERNAME with your actual username
-    quickshell.package = pkgs.quickshell;
-  };
+  # services.displayManager.dms-greeter = {
+  #   enable = true;
+  #   compositor.name = "hyprland"; # Compositor to launch after login
+  #   configHome = "/home/YOUR_USERNAME"; # Replace YOUR_USERNAME with your actual username
+  #   quickshell.package = pkgs.quickshell;
+  # };
 
   # Sudo Configuration
   # ------------------
