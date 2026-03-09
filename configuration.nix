@@ -63,20 +63,45 @@
   # Bootloader Configuration
   # ------------------------
   # systemd-boot is a simple UEFI boot manager. Alternative: GRUB
-  boot.loader.systemd-boot.enable = true;
+  #boot.loader.systemd-boot.enable = true;
+  #boot.loader.efi.canTouchEfiVariables = true;
 
-  # Allow NixOS to modify EFI boot variables (required for bootloader updates)
-  boot.loader.efi.canTouchEfiVariables = true;
+  #Grub
+  #----
+  boot.loader = {
+    timeout = 1;
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot"; # Change this if your ESP is mounted elsewhere
+    };
+    grub = {
+      enable = true;
+      efiSupport = true;
+      device = "nodev"; # "nodev" is required for UEFI installs
+      useOSProber = false; # Set to true if you dual-boot with Windows/other Linux
+      theme = pkgs.sleek-grub-theme.override {
+        withStyle = "dark"; # "dark", "light", "orange", or "bigSur"
+        withBanner = "NixOS"; # optional: text shown at the top of the menu
+      };
+    };
+  };
 
-  # Boot Splash Screen (currently disabled)
-  # ----------------------------------------
-  # Uncomment these for a quieter boot with a splash screen
-  #boot.kernelParams = [
-  #  "quiet"       # Suppress kernel messages
-  #  "splash"      # Show splash screen
-  #  "console=tty0" # Redirect console output
-  # ];
-  #boot.plymouth.enable = true;  # Graphical boot splash
+  # Boot Splash Screen
+  # ------------------
+  # Use plymoth to make it prettier
+  boot.plymouth = {
+    enable = true;
+    theme = "bgrt";
+  };
+
+  # Keep boot output quiet while still logging to the kernel log.
+  boot.consoleLogLevel = 0;
+  boot.initrd.verbose = false;
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "udev.log_level=3"
+  ];
 
   #############################################################################
   ## SYSTEM                                                                   ##
